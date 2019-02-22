@@ -40,9 +40,18 @@
   </nav>
   <div class="content" id="create">
     This is the create page
+    
+      <input type = "text" id = "subject" placeholder = "Enter a subject">
+      <textarea id = "content" placeholder = "Enter the conent"></textarea>
+      <button id = "saveNote"> Save </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+   
   </div>
   <div class="content" id="list">
     This is the list page
+
   </div>
   <div class="content" id="detail">
     This is detail page
@@ -54,6 +63,11 @@
       
 
     <script>
+      var db = new Dexie("notes_database");
+        db.version(1).stores({
+           notes: 'subject'
+       });
+         
       $(document).ready(function() {
 
         function hideScreens() {
@@ -64,6 +78,12 @@
           hideScreens();
           var target = $(this).attr("href");
           $(target).show();
+        });
+          
+        $("saveNote").on("click", function(){
+            var subject = $("#subject").val();
+            var content = $("#content").val();
+            db.notes.put({subject: subject, content: content});
         });
 
       });
