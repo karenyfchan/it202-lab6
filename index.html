@@ -14,6 +14,12 @@
 			display: none;
 			margin: 1em;
 		}
+        
+        #list p{
+            border-bottom: solid-gray 2px;
+        }
+        
+        
 	</style>
 
 </head>
@@ -62,8 +68,10 @@
 
       var db = new Dexie("notes_database");
       db.version(1).stores({
-          notes: "subject"
+          notes: "++id, subject"
       });
+        
+      
 
       //db.notes.put({subject: "test"});
 
@@ -85,11 +93,24 @@
           db.notes.each(function(note) {
             
             var p = $("<p>");
+            p.attr("data-id", note.id);
+            p.addClass("list-note");
             p.text(note.subject);
-            
             $("#list").append(p);
           });
         }
+          
+        function loadNoteDetail(id){
+            console.log(id);
+            db.notes.get(id).then(function(note)){
+                $("#detail").append(note.subject);
+                $("$detail").append(note.content);
+            }
+        }
+          
+        $("body").on("click", ".list-note", function(){
+            loadNoteDetail($(this).attr("data-id"));
+        });
 
         $(".nav-link").on("click", function(){
           hideScreens();
